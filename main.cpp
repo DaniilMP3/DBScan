@@ -71,6 +71,7 @@ bool expandCluster(point *arr, const int &N, const int point_index, int cluster_
 
         while(!pointQuery.empty()){
             int currentPoint = pointQuery.front();
+
             pointQuery.erase(pointQuery.begin());
 
             vector<int> result = getPointQuery(arr, N, currentPoint, eps); //calculate neighbours for point from stack
@@ -91,7 +92,6 @@ bool expandCluster(point *arr, const int &N, const int point_index, int cluster_
                 for (int i : result){
                     pointQuery.push_back(i);
                 }
-
             }
 
             remove(pointQuery, currentPoint);
@@ -102,14 +102,21 @@ bool expandCluster(point *arr, const int &N, const int point_index, int cluster_
 
 
 int main() {
-    point p1{1, 1, false}, p2{1.5, 1, false}, p3{0, 0, false};
-    point p4{0.5, 1.5, false}, p5{0.5, 0.5, false}, p6{2, 0, false}, p7{3, 0, false}, p8{-0.5, -0.5, false};
-    point p9{3,0, false};
+    point p1{1, 1, false},
+    p2{1.5, 1, false},
+    p3{0, 0, false},
+    p4{0.5, 1.5, false},
+    p5{0.5, 0.5, false},
+    p6{2, 0, false},
+    p7{3, 0, false},
+    p8{-0.5, -0.5, false},
+    p9{-3,0, false},
+    p10{-2.5, 0.5, false};
 
-    point arr[9] = {p1, p2, p3, p4, p5, p6, p7, p8, p9};
+    point arr[10] = {p1, p2, p3, p4, p5, p6, p7, p8, p9, p10};
 
-    const float eps = 1.0; const int minPts = 3;
-    int N = 9;
+    const float eps = 1.0; const int minPts = 2;
+    int N = 10;
 
 
 //    expandCluster(arr, N, point_index, 1, eps, minPts);

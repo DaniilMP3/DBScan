@@ -2,13 +2,8 @@
 #include "geodeb.h"
 #include <vector>
 #include <cmath>
-#include <string>
 
 using namespace std;
-
-#define NOISE 0;
-#define BORDER 1;
-#define CORE 2;
 
 
 struct point{
@@ -16,6 +11,24 @@ struct point{
     bool classified = false;
     int cluster = 0;
 };
+
+string COLORS[10] = {"#A52A2A",
+                     "#5F9EA0",
+                     "#7FFF00",
+                     "#FF7F50",
+                     "#DC143C",
+                     "#006400",
+                     "#FF8C00",
+                     "#2F4F4F",
+                     "#9400D3",
+                     "#FF1493"};
+int color_id = 0;
+
+void draw(point *arr, int &p_index, int &id){
+
+    GD_POINT(arr[p_index].x, arr[p_index].y, COLORS[id]);
+
+}
 
 
 vector<int> getPointQuery(point *arr, const int &N, const int &point_index, const float &eps){
@@ -67,6 +80,10 @@ bool expandCluster(point *arr, const int &N, const int point_index, int cluster_
     }
     else{ //core
         changeStatus(arr, pointQuery, cluster_id);
+        for(int k : pointQuery){
+            draw(arr, k, color_id);
+        }
+
         remove(pointQuery, point_index);
 
         while(!pointQuery.empty()){
@@ -82,15 +99,18 @@ bool expandCluster(point *arr, const int &N, const int point_index, int cluster_
                         if(!arr[i].classified){
                             pointQuery.push_back(i);
                         }
-                        arr[i].cluster = cluster_id;
+                        arr[i].cluster = cluster_id; //add to cluster
+                        draw(arr, i, color_id);
                     }
                 }
             }
 
             else if(!result.empty() && result.size() < minPts){
                 changeStatus(arr, result, cluster_id);
+
                 for (int i : result){
                     pointQuery.push_back(i);
+                    draw(arr, i, color_id);
                 }
             }
 
@@ -102,6 +122,8 @@ bool expandCluster(point *arr, const int &N, const int point_index, int cluster_
 
 
 int main() {
+    GD_INIT("graph.html");
+
     point p1{1, 1, false},
     p2{1.5, 1, false},
     p3{0, 0, false},
@@ -118,6 +140,7 @@ int main() {
     const float eps = 1.0; const int minPts = 2;
     int N = 10;
 
+    vector<int> v = {0, 1, 2};
 
 //    expandCluster(arr, N, point_index, 1, eps, minPts);
 
@@ -129,6 +152,8 @@ int main() {
         if (!arr[i].classified){
             if(expandCluster(arr, N, i, cluster_id, eps, minPts)){
                 cluster_id += 1;
+                color_id += 1;
+
             }
         }
     }
